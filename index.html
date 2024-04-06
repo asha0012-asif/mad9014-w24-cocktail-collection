@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cocktail Collection Assignment</title>
+
+        <link rel="stylesheet" href="./css/css-reset.css">
+        <link rel="stylesheet" href="./css/main.css">
+    </head>
+    <body>
+        <header class="header">
+            <div class="container">
+                <a href="#" class="header__link">
+                    <h1 class="header__title">Cocktail Collection</h1>
+                </a>
+
+                <form action="#" id="searchForm">
+                    <div class="form-grid">
+                        <input type="search" name="search-input" id="search-input" placeholder="Search">
+                
+                        <button type="submit" id="search-btn" class="btn">Search</button>
+                        <button type="menu" id="saved-btn" class="btn">Saved</button>
+                    </div>
+                </form>
+            </div>
+        </header>
+
+        <main>
+            <section class="drinks-display">
+                <div class="container">
+                    <h2 id="message">Search for your fav cocktails.</h2><hr>
+                    <ul id="drinks-list" class="card__grid"></ul>
+                </div>
+            </section>
+
+            <dialog id="dialog" class="dialog">
+                <!-- <h3 class="card__content-title">${drinkName}</h3>
+                <div class="card__image">
+                    <img src="${blobURL}" alt="picture of ${drinkName} drink">
+                </div>
+                <div class="card__content">
+                    <h4 class="card__content-subtitle">Instructions</h4>
+                    <p class="card__content-text">${drinkInstructions}</p>
+
+                    <button type="button">Cancel</button>
+                </div> -->
+            </dialog>
+        </main>
+
+        <script src="./js/main.js"></script>
+    </body>
+</html>
