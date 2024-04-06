@@ -32,26 +32,6 @@ const APP = {
         }
     },
 
-    validateSearch: (ev) => {
-        ev.preventDefault();
-
-        // reset the inner html for every new search
-        APP.drinksList.innerHTML = "";
-        
-        let drink = APP.searchInput.value.trim();
-        APP.searchInput.value = "";
-
-        // if there is no input, display relevant message and do not continue
-        if (drink === "") {
-            APP.displayMessage("Please enter a valid name.", "#bd1f36");
-            return;
-        } else {
-            APP.displayMessage(`Searching for ${drink}...`, "#bdb21f");
-            APP.fetchData(drink);
-        }
-
-    },
-
     getSavedDrinks: async (ev) => {
         ev.preventDefault();
 
@@ -98,6 +78,26 @@ const APP = {
         });
 
         return drinkData;
+    },
+
+    validateSearch: (ev) => {
+        ev.preventDefault();
+
+        // reset the inner html for every new search
+        APP.drinksList.innerHTML = "";
+        
+        let drink = APP.searchInput.value.trim();
+        APP.searchInput.value = "";
+
+        // if there is no input, display relevant message and do not continue
+        if (drink === "") {
+            APP.displayMessage("Please enter a valid name.", "#bd1f36");
+            return;
+        } else {
+            APP.displayMessage(`Searching for ${drink}...`, "#bdb21f");
+            APP.fetchData(drink);
+        }
+
     },
 
     fetchData: async (drink) => {
