@@ -1,8 +1,3 @@
-/*
-TO-DO FOR NEXT TIME:
-- make saved page using history API
-*/
-
 const APP = {
     key: "drink",
     searchInput: document.querySelector("#search-input"),
@@ -13,7 +8,10 @@ const APP = {
         console.log("App initialized.");
         
         APP.getLocalStorage();
-        
+        APP.eventListeners();
+    },
+
+    eventListeners: () => {
         let searchBtn = document.querySelector("#search-btn");
         searchBtn.addEventListener("click", APP.validateSearch);
 
@@ -39,8 +37,9 @@ const APP = {
 
         // reset the inner html for every new search
         APP.drinksList.innerHTML = "";
-
+        
         let drink = APP.searchInput.value.trim();
+        APP.searchInput.value = "";
 
         // if there is no input, display relevant message and do not continue
         if (drink === "") {
@@ -50,6 +49,7 @@ const APP = {
             APP.displayMessage(`Searching for ${drink}...`, "#bdb21f");
             APP.fetchData(drink);
         }
+
     },
 
     getSavedDrinks: async (ev) => {
@@ -178,11 +178,10 @@ const APP = {
         <div class="dialog__content">
             <h4 class="dialog__content-subtitle">Instructions</h4>
             <p class="dialog__content-text">${strInstructions}</p>
-
             <button class="btn" id="cancel-btn">Cancel</button>
         </div>
         `
-        
+
         // if method is search, add a save button, otherwise don't
         switch (method) {
             case "Search":
@@ -230,7 +229,7 @@ const APP = {
                 saveBtn.innerText = "Saved";
             });
         }
-
+        console.log(dialog);
         dialog.showModal();
     },
 

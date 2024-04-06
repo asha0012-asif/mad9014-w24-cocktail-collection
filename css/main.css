@@ -87,25 +87,47 @@ input {
     padding: 1rem 1.5rem;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.header__link {
+    text-decoration: none;
 }
 
 .header__title {
-    color: white;
+    color: #ececec;
+}
+
+.header__title:hover,
+.header__title:focus-visible {
+    color: #fff;
 }
 
 .header .btn {
-    background-color: var(--color-secondary);
-    border-color: var(--color-secondary);
-    color: var(--color-primary);
+    background-color: #2E2EFF;
+    border-color: #2E2EFF;
+    color: #fff;
 }
 
 .header .btn:hover,
-.header .btn:focus {
-    background-color: var(--color-secondary--light);
-    border-color: var(--color-secondary--light);
-    color: var(--color-primary);
+.header .btn:focus-visible {
+    background-color: #a789ff;
+    border-color: #a789ff;
+    color: #fff;
+}
+
+/* FORM */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+
+    #search-input {
+        grid-column: span 2;
+    }
 }
 
 /* --- DRINKS DISPLAY SECTION --- */
@@ -173,14 +195,21 @@ input {
     }
 }
 
-.dialog .container {
-    width: 35rem;
-    padding: 1.5rem;
-}
-
 .dialog::backdrop {
     background-color: var(--color-primary);
     opacity: 0.75;
+}
+
+.dialog .container {
+    width: 25rem;
+    padding: 1.5rem;
+
+    display: grid;
+    gap: 0.5rem;
+}
+
+.dialog #cancel-btn {
+    margin-top: 1rem;
 }
 
 #saveDrink-btn:disabled {
@@ -190,6 +219,10 @@ input {
 }
 
 @media only screen and (min-width: 45rem) {
+    .header .container {
+        justify-content: space-between;
+    }
+
     /* --- DRINKS DISPLAY SECTION --- */
     .drinks-display .container {
         padding: 3rem;
