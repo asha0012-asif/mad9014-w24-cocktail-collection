@@ -1,3 +1,6 @@
+import SAVED from "./saved.js";
+import SEARCH from "./search.js";
+
 const APP = {
     key: "drink",
     searchInput: document.querySelector("#search-input"),
@@ -7,123 +10,68 @@ const APP = {
     init: () => {
         console.log("App initialized.");
         
-        APP.getLocalStorage();
+        APP.drinks = SAVED.getLocalStorage(APP.drinks);
         APP.eventListeners();
     },
 
     eventListeners: () => {
         let searchBtn = document.querySelector("#search-btn");
-        searchBtn.addEventListener("click", APP.validateSearch);
-
-        let savedBtn = document.querySelector("#saved-btn");
-        savedBtn.addEventListener("click", APP.getSavedDrinks);
-    },
-
-    getLocalStorage: () => {        
-        // get the items from local storage, convert from JSON to a JS array
-        let drinkIDs = JSON.parse(localStorage.getItem("drinkIDs"));
-        console.log("DrinkIDs from local storage:", drinkIDs);
-        
-        // if drinkIDs array has items, spread each item and push to global drinks array
-        if (drinkIDs) {
-            APP.drinks.push(...drinkIDs);
-        } else {
-            
-        }
-    },
-
-    getSavedDrinks: async (ev) => {
-        ev.preventDefault();
-
-        // reset the inner html for every time saveBtn is pressed
-        APP.drinksList.innerHTML = "";
-
-        const drinksData = await Promise.all(APP.fetchSavedData());
-        console.log(drinksData);
-
-        if (drinksData.length !== 0) {     
-            console.log("Data found");
-
-            APP.displayMessage("Saved Results");
-            APP.displayDrinks("Saved", drinksData);
-        } else {
-            console.log("Data found");
-            APP.displayMessage("No results saved", "#bd1f36");
-        }
-    },
-
-    fetchSavedData: () => {
-        let drinkData = APP.drinks.map(async (drinkID) =>  {
-            console.log(drinkID);
-
-            try {
-                const BASE_URL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?api-key=1&i=${drinkID}`;
-
-                let response = await fetch(BASE_URL);
-                // console.log(response);
-
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-
-                let data = await response.json();
-                // console.log(data);
-
-                // each data results array has only one data object at index 0
-                return data.drinks[0];
-                
-            } catch (err) {
-                console.log(err);
-            }
+        searchBtn.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            APP.getData("Search");
         });
 
-        return drinkData;
+        let savedBtn = document.querySelector("#saved-btn");
+        savedBtn.addEventListener("click", (ev) => {
+            ev.preventDefault();
+
+            // if there are no drinks in localStorage, do not continue
+            if (APP.drinks.length === 0) {
+                APP.displayMessage("No Results Saved", "#bd1f36"); 
+                return;
+            }
+
+            APP.getData("Saved");
+        });
     },
 
-    validateSearch: (ev) => {
-        ev.preventDefault();
-
-        // reset the inner html for every new search
+    getData: async (method) => {
+        // reset the inner html for every time search or saved btn is pressed
         APP.drinksList.innerHTML = "";
-        
-        let drink = APP.searchInput.value.trim();
-        APP.searchInput.value = "";
 
-        // if there is no input, display relevant message and do not continue
-        if (drink === "") {
-            APP.displayMessage("Please enter a valid name.", "#bd1f36");
-            return;
-        } else {
-            APP.displayMessage(`Searching for ${drink}...`, "#bdb21f");
-            APP.fetchData(drink);
+        // change value of drinksData based on the method of btn used
+        let drinksData;
+
+        switch (method) {
+            case "Search":
+                let drink = APP.searchInput.value.trim();
+                APP.searchInput.value = "";
+
+                // if there is no input, do not continue
+                if (drink === "") {
+                    APP.displayMessage("Please enter a valid name.", "#bd1f36");
+                    return;
+                }
+
+                APP.displayMessage(`Searching for ${drink}...`, "#bdb21f");
+            
+                drinksData = await SEARCH.fetchData(drink);
+                console.log(drinksData);
+                
+                break;
+            case "Saved":
+                drinksData = await SAVED.getSavedDrinks(APP.drinks);
+                console.log(drinksData);
+                break;
+        
+            default:
+                console.log("No method was passed in.");
+                break;
         }
 
-    },
-
-    fetchData: async (drink) => {
-        // create an actual URL object
-        const BASE_URL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?api-key=1&s=${drink}`;
-
-        try {
-            let response = await fetch(BASE_URL);
-            console.log(response);
-
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-
-            let data = await response.json();
-            console.log(data);
-
-            if (!data.drinks) {
-                APP.displayMessage(`No results found for ${drink}.`, "#bd1f36");
-                return;
-            } else {
-                APP.displayMessage(`Search results for ${drink}.`, "#258415");
-                APP.displayDrinks("Search", data.drinks);
-            }
-        } catch (err) {
-            console.log(err);
+        // if there is something in drinksData, then continue
+        if (drinksData) {
+            APP.displayDrinks(method, drinksData);
         }
     },
 
@@ -192,6 +140,7 @@ const APP = {
                 saveBtnDOM.classList.add("btn");
                 saveBtnDOM.setAttribute("id", "saveDrink-btn");
 
+                console.log(APP.drinks);
                 if (APP.drinks.includes(idDrink)) {
                     saveBtnDOM.setAttribute("disabled", "");
                     saveDrinkBtnContent = "Already saved";
@@ -241,3 +190,5 @@ const APP = {
 }
 
 window.addEventListener("DOMContentLoaded", APP.init);
+
+export default APP;
